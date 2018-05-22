@@ -1,0 +1,38 @@
+.header {
+  display: block;
+  padding-top: 38px;
+  margin-bottom: 30px;
+  text-align: center;
+  font-size: 30px;
+  background-color: gray;
+}
+
+.pokedex {
+  height: 1000px;
+  margin-left: 10%;
+  margin-right: 10%;
+  background-color: lightgray;
+  border: 1px solid black;
+}
+
+.pokemon-search {
+  margin-left: 10%;
+  margin-right: 10%;
+  padding-top: 10px;
+  padding-bottom: 10px;
+  /* background-image: url('./search.svg'); */
+}
+
+.search-img {
+  float: right;
+  height: auto;
+  width: auto;
+}
+
+.input {
+  font-size: 18px;
+  width: 100%;
+  border: 0;
+  background: transparent;
+  border-bottom: 1px solid gray;
+}

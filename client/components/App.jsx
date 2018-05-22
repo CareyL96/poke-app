@@ -1,25 +1,44 @@
 import React from 'react';
 import axios from 'axios';
+import Search from './Search';
+import PokemonCollection from './PokemonCollection';
 
 class App extends React.Component {
   constructor() {
     super();
-    this.state = {};
+    this.state = {
+      view: 'main',
+    };
   }
 
-  componentDidMount() {
-    axios.get('http://localhost:8080/main/')
-      .then((response) => {
-        console.log(response);
-      })
-      .catch((err) => {
-        console.log(err);
-      });
+  // componentDidMount() {
+  //   const context = this;
+  //   axios.get('http://localhost:8080/pokemon-collection/')
+  //     .then((response) => {
+  //       context.setState({
+  //         pokemon: response.data,
+  //       });
+  //     })
+  //     .catch((err) => {
+  //       console.log(err);
+  //     });
+  // }
+
+  renderView() {
+    const { view } = this.state;
+    if (view === 'singlepokemon') {
+      return <SinglePokemon />;
+    }
+    return <PokemonCollection />;
   }
 
   render() {
     return (
-      <div>hello</div>
+      <div className="main-container">
+        <div className="header">An interactive PokeDex</div>
+        <Search />
+        {this.renderView()}
+      </div>
     );
   }
 }
