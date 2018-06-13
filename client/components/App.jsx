@@ -1,6 +1,4 @@
 import React from 'react';
-import axios from 'axios';
-import Search from './Search';
 import PokemonCollection from './PokemonCollection';
 
 class App extends React.Component {
@@ -26,9 +24,6 @@ class App extends React.Component {
 
   renderView() {
     const { view } = this.state;
-    if (view === 'singlepokemon') {
-      return <SinglePokemon />;
-    }
     return <PokemonCollection />;
   }
 
@@ -36,7 +31,6 @@ class App extends React.Component {
     return (
       <div className="main-container">
         <div className="header">An interactive PokeDex</div>
-        <Search />
         {this.renderView()}
       </div>
     );

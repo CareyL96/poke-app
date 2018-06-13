@@ -1,13 +1,27 @@
 import React from 'react';
 import axios from 'axios';
-import SinglePokemon from './SinglePokemon';
+import $ from 'jquery';
+import Search from './Search';
+import PokemonCollectionEntry from './PokemonCollectionEntry';
+import PokemonInfo from './PokemonInfo';
+
+const toUpperCase = (string) => {
+  return string.charAt(0).toUpperCase() + string.slice(1);
+};
 
 class PokemonCollection extends React.Component {
   constructor(props) {
     super(props);
     this.state = {
-      pokemon: null,
+      view: 'collection',
+      pokemonCollection: null,
+      currentPokemon: null,
+      scrollLocation: 0,
     };
+
+    this.handleClick = this.handleClick.bind(this);
+    this.handleChange = this.handleChange.bind(this);
+    this.returnToCollection = this.returnToCollection.bind(this);
   }
 
   componentDidMount() {
@@ -15,7 +29,7 @@ class PokemonCollection extends React.Component {
     axios.get('http://localhost:8080/pokemon-collection/')
       .then((response) => {
         context.setState({
-          pokemon: response.data,
+          pokemonCollection: response.data,
         });
       })
       .catch((err) => {
@@ -23,25 +37,82 @@ class PokemonCollection extends React.Component {
       });
   }
 
-  renderPokemon() {
-    return this.state.pokemon.map(pokemon => (<SinglePokemon
-      id={pokemon.id}
-      name={pokemon.name}
-      types={pokemon.types}
-      sprite={pokemon.sprite}
-    />));
+  handleClick(pokemon) {
+    let scrollLocation = $(".collection").scrollTop();
+    this.setState({
+      currentPokemon: pokemon,
+      view: 'pokemon',
+      scrollLocation: scrollLocation,
+    });
+  }
+
+  handleChange(input) {
+    $('.pokemon').each(function () {
+      let name = $(this)[0].classList[1];
+      if (name.indexOf(input) === -1) {
+        $(this).hide();
+      } else {
+        $(this).show();
+      }
+    });
+  }
+
+  renderView() {
+    if (this.state.view === 'pokemon') {
+      return <PokemonInfo id={this.state.currentPokemon.id}
+        name={toUpperCase(this.state.currentPokemon.name)}
+        sprite={this.state.currentPokemon.sprite}
+        types={this.state.currentPokemon.types}
+        returnToCollection={this.returnToCollection}
+      />;
+    }
+    return (
+      <div className="pokemon-collection-wrapper">
+        {this.state.pokemonCollection.map(pokemon => {
+          return <PokemonCollectionEntry
+            pokemon={pokemon}
+            // id={pokemon.id}
+            // name={toUpperCase(pokemon.name)}
+            // types={pokemon.types}
+            // sprite={pokemon.sprite}
+            handleClick={this.handleClick}
+          />
+        })}
+      </div>
+    );
+  }
+
+  returnToCollection() {
+    let scrollLocation = this.state.scrollLocation;
+    console.log(this.state.scrollLocation);
+    if (this.state.view === 'pokemon') {
+      this.setState({
+        view: 'collection',
+      });
+      setTimeout(function(){$('.collection').scrollTop(scrollLocation)}, 0);
+    }
   }
 
   render() {
-    if (this.state.pokemon) {
+    if (this.state.pokemonCollection) {
       return (
-        <div className="collection">
-          {this.renderPokemon()}
+        <div className="outer-container">
+          <Search handleChange={this.handleChange} />
+          <div className="collection">
+            {this.renderView()}
+          </div>
         </div>
       );
     }
-    return <div className="collection" />;
+    return (
+      <div className="loading">
+        <img src="loadingpikachu.png" alt="" className="loadingimg" />
+        <div>Loading...</div>
+      </div>
+    );
   }
 }
 
 export default PokemonCollection;
+
+// http://static.pokemonpets.com/images/monsters-images-300-300/2025-Shiny-Pikachu.png

@@ -1,10 +1,10 @@
 import React from 'react';
 
-const Search = () => {
+const Search = ({handleChange}) => {
   return (
     <div className="pokemon-search">
-      <input type="text" placeholder="Search Pokemon" className="input" />
-      {/* <img src="search.svg" alt="" className="search-img" /> */}
+      <input type="text" placeholder="Search Pokemon" className="input" onChange={(e) => handleChange(e.target.value)}/>
+      {/* <img src="search.svg" alt="" className="search-icon" /> */}
     </div>
   );
 };
